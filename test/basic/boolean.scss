@@ -1,0 +1,13 @@
+$bool: true;
+
+test {
+
+  bool: sass_boolean_get_value($bool);
+  $bool: sass_boolean_set_value($bool, false);
+  bool: sass_boolean_get_value($bool);
+  $bool: sass_boolean_set_value($bool, true);
+  bool: sass_boolean_get_value($bool);
+
+  bool: $bool;
+
+}

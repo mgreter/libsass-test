@@ -1,0 +1,15 @@
+$args: (null, (a, b), (a: a, b: b), 42, 42px, literal, "quoted");
+
+test-is {
+  @each $var in $args {
+    sass_value_is_null: sass_value_is_null($var);
+    sass_value_is_number: sass_value_is_number($var);
+    sass_value_is_string: sass_value_is_string($var);
+    sass_value_is_boolean: sass_value_is_boolean($var);
+    sass_value_is_color: sass_value_is_color($var);
+    sass_value_is_list: sass_value_is_list($var);
+    sass_value_is_map: sass_value_is_map($var);
+    sass_value_is_error: sass_value_is_error($var);
+    sass_value_is_warning: sass_value_is_warning($var);
+  }
+}

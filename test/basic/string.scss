@@ -1,0 +1,21 @@
+$literal: literal;
+$qstring: "quoted";
+
+test {
+
+  quoted: sass_string_is_quoted($literal);
+  literal: sass_string_get_value($literal);
+  $literal: sass_string_set_value($literal, another);
+  quoted: sass_string_is_quoted($literal);
+  literal: sass_string_get_value($literal);
+
+  quoted: sass_string_is_quoted($qstring);
+  qstring: sass_string_get_value($qstring);
+  $qstring: sass_string_set_value($qstring, another);
+  quoted: sass_string_is_quoted($qstring);
+  qstring: sass_string_get_value($qstring);
+
+  literal: $literal;
+  qstring: $qstring;
+
+}

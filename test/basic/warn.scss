@@ -1,0 +1,5 @@
+warn {
+  $warn: "init";
+  @warn("warn");
+  last-warn: $warn;
+}

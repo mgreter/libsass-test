@@ -1,0 +1,22 @@
+$color: rgba(10, 20, 30, 0.6);
+
+test {
+
+  color-get-r: sass_color_get_r($color);
+  color-get-g: sass_color_get_g($color);
+  color-get-b: sass_color_get_b($color);
+  color-get-a: sass_color_get_a($color);
+
+  $color: sass_color_set_r($color, 16);
+  $color: sass_color_set_g($color, 32);
+  $color: sass_color_set_b($color, 64);
+  $color: sass_color_set_a($color, 0.9);
+
+  color-get-r: sass_color_get_r($color);
+  color-get-g: sass_color_get_g($color);
+  color-get-b: sass_color_get_b($color);
+  color-get-a: sass_color_get_a($color);
+
+  color: $color;
+
+}

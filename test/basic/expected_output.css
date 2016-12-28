@@ -1,0 +1,123 @@
+test-is {
+  sass_value_is_null: true;
+  sass_value_is_number: false;
+  sass_value_is_string: false;
+  sass_value_is_boolean: false;
+  sass_value_is_color: false;
+  sass_value_is_list: false;
+  sass_value_is_map: false;
+  sass_value_is_error: false;
+  sass_value_is_warning: false;
+  sass_value_is_null: false;
+  sass_value_is_number: false;
+  sass_value_is_string: false;
+  sass_value_is_boolean: false;
+  sass_value_is_color: false;
+  sass_value_is_list: true;
+  sass_value_is_map: false;
+  sass_value_is_error: false;
+  sass_value_is_warning: false;
+  sass_value_is_null: false;
+  sass_value_is_number: false;
+  sass_value_is_string: false;
+  sass_value_is_boolean: false;
+  sass_value_is_color: false;
+  sass_value_is_list: false;
+  sass_value_is_map: true;
+  sass_value_is_error: false;
+  sass_value_is_warning: false;
+  sass_value_is_null: false;
+  sass_value_is_number: true;
+  sass_value_is_string: false;
+  sass_value_is_boolean: false;
+  sass_value_is_color: false;
+  sass_value_is_list: false;
+  sass_value_is_map: false;
+  sass_value_is_error: false;
+  sass_value_is_warning: false;
+  sass_value_is_null: false;
+  sass_value_is_number: true;
+  sass_value_is_string: false;
+  sass_value_is_boolean: false;
+  sass_value_is_color: false;
+  sass_value_is_list: false;
+  sass_value_is_map: false;
+  sass_value_is_error: false;
+  sass_value_is_warning: false;
+  sass_value_is_null: false;
+  sass_value_is_number: false;
+  sass_value_is_string: true;
+  sass_value_is_boolean: false;
+  sass_value_is_color: false;
+  sass_value_is_list: false;
+  sass_value_is_map: false;
+  sass_value_is_error: false;
+  sass_value_is_warning: false;
+  sass_value_is_null: false;
+  sass_value_is_number: false;
+  sass_value_is_string: true;
+  sass_value_is_boolean: false;
+  sass_value_is_color: false;
+  sass_value_is_list: false;
+  sass_value_is_map: false;
+  sass_value_is_error: false;
+  sass_value_is_warning: false; }
+
+test {
+  quoted: false;
+  literal: literal;
+  quoted: false;
+  literal: another;
+  quoted: true;
+  qstring: quoted;
+  quoted: true;
+  qstring: another;
+  literal: another;
+  qstring: another; }
+
+test {
+  color-get-r: 10;
+  color-get-g: 20;
+  color-get-b: 30;
+  color-get-a: 0.6;
+  color-get-r: 16;
+  color-get-g: 32;
+  color-get-b: 64;
+  color-get-a: 0.9;
+  color: rgba(16, 32, 64, 0.9); }
+
+test {
+  bool: true;
+  bool: false;
+  bool: true;
+  bool: true; }
+
+test {
+  length: 3;
+  item-1: a;
+  item-2: b;
+  item-3: c;
+  item-2: new;
+  sep-space: 1;
+  sep-comma: 0;
+  space: a b c;
+  comma: a, new, c; }
+
+test {
+  length: 2;
+  key-1: a;
+  item-1: a;
+  key-2: b;
+  item-2: b;
+  key-2: new;
+  item-2: new;
+  map: (a: a, new: new); }
+
+warn {
+  last-warn: warn; }
+
+debug {
+  last-debug: debug; }
+
+error {
+  last-error: error; }

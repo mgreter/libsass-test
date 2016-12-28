@@ -1,0 +1,19 @@
+$space: (a b c);
+$comma: (a, b, c);
+
+test {
+
+  length: sass_list_get_length($comma);
+  item-1: sass_list_get_value($comma, 0);
+  item-2: sass_list_get_value($comma, 1);
+  item-3: sass_list_get_value($comma, 2);
+  $comma: sass_list_set_value($comma, 1, "new");
+  item-2: sass_list_get_value($comma, 1);
+
+  sep-space: sass_list_get_separator($space);
+  sep-comma: sass_list_get_separator($comma);
+
+  space: inspect($space);
+  comma: inspect($comma);
+
+}

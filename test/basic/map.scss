@@ -1,0 +1,17 @@
+$map: (a: a, b: b);
+
+test {
+
+  length: sass_map_get_length($map);
+  key-1: sass_map_get_key($map, 0);
+  item-1: sass_map_get_value($map, 0);
+  key-2: sass_map_get_key($map, 1);
+  item-2: sass_map_get_value($map, 1);
+  $map: sass_map_set_value($map, 1, "new");
+  $map: sass_map_set_key($map, 1, "new");
+  key-2: sass_map_get_key($map, 1);
+  item-2: sass_map_get_value($map, 1);
+
+  map: inspect($map);
+
+}
