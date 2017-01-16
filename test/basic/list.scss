@@ -1,7 +1,7 @@
 $space: (a b c);
 $comma: (a, b, c);
 
-test {
+lists {
 
   length: sass_list_get_length($comma);
   item-1: sass_list_get_value($comma, 0);

@@ -1,0 +1,16 @@
+$nr: 42px;
+
+numbers {
+
+  number-get-unit: sass_number_get_unit($nr);
+  number-get-value: sass_number_get_value($nr);
+
+  $nr: sass_number_set_unit($nr, "rad");
+  $nr: sass_number_set_value($nr, 3.14);
+
+  number-get-unit: sass_number_get_unit($nr);
+  number-get-value: sass_number_get_value($nr);
+
+  nr: $nr;
+
+}

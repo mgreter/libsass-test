@@ -1,0 +1,9 @@
+stringify {
+
+  tst-01: sass-value-stringify(42px);
+  tst-02: sass-value-stringify(42px);
+  tst-02: sass-value-stringify(42px);
+  tst-02: sass-value-stringify(4px/4);
+  tst-02: sass-value-stringify(yellow);
+
+}

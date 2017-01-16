@@ -63,7 +63,14 @@ test-is {
   sass_value_is_error: false;
   sass_value_is_warning: false; }
 
-test {
+numbers {
+  number-get-unit: px;
+  number-get-value: 42;
+  number-get-unit: rad;
+  number-get-value: 3.14;
+  nr: 3.14rad; }
+
+string {
   quoted: false;
   literal: literal;
   quoted: false;
@@ -75,7 +82,7 @@ test {
   literal: another;
   qstring: another; }
 
-test {
+colors {
   color-get-r: 10;
   color-get-g: 20;
   color-get-b: 30;
@@ -86,13 +93,13 @@ test {
   color-get-a: 0.9;
   color: rgba(16, 32, 64, 0.9); }
 
-test {
+bools {
   bool: true;
   bool: false;
   bool: true;
   bool: true; }
 
-test {
+lists {
   length: 3;
   item-1: a;
   item-2: b;
@@ -103,7 +110,7 @@ test {
   space: a b c;
   comma: a, new, c; }
 
-test {
+maps {
   length: 2;
   key-1: a;
   item-1: a;
@@ -112,6 +119,32 @@ test {
   key-2: new;
   item-2: new;
   map: (a: a, new: new); }
+
+stringify {
+  tst-01: 42px;
+  tst-02: 42px;
+  tst-02: 42px;
+  tst-02: 1px;
+  tst-02: yellow; }
+
+ops {
+  op-01: ab;
+  op-02: 2;
+  op-03: 4-red;
+  op-04: #0000fd;
+  op-05: white;
+  op-06: blueyellow;
+  op-07: 8;
+  op-08: 1.8px;
+  op-09: 5.45455px;
+  op-10: false;
+  op-11: false;
+  op-12: false;
+  op-13: true;
+  op-14: true;
+  op-15: false;
+  op-16: false;
+  op-17: 9; }
 
 warn {
   last-warn: warn; }

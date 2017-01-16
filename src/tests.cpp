@@ -4,6 +4,9 @@
 #include <string>
 #include "sass.h"
 
+// NOTE: this probably leaks memory here and there
+// this is only meant to test some libsass interna
+
 // most functions are very simple
 #define IMPLEMENT_IS_FN(fn) \
 union Sass_Value* fn_##fn(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp) \
@@ -122,10 +125,10 @@ union Sass_Value* fn_##fn(const union Sass_Value* s_args, Sass_Function_Entry cb
     return sass_make_error("You must pass a " #type1 " into " #fn); \
   } \
   union Sass_Value* arg = sass_list_get_value(s_args, 1); \
-  if (!sass_value_is_##rv_type(arg)) { \
-    return sass_make_error("You must pass a " #rv_type " into " #fn); \
+  if (!sass_value_is_string(arg)) { \
+    return sass_make_error("You must pass a string into " #fn); \
   } \
-  sass_##fn(inp, strdup(sass_##rv_type##_get_##val_type(arg))); \
+  sass_##fn(inp, strdup(sass_string_get_value(arg))); \
   return sass_clone_value(inp); \
 } \
 
@@ -217,29 +220,83 @@ IMPLEMENT_SET_ITEM(map_set_value, map, value)
 
 union Sass_Value* fn_warn(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
 {
+  union Sass_Value* msg = sass_make_warning("warning catched");
+  sass_warning_set_message(msg, sass_error_get_message(msg));
+  sass_warning_set_message(msg, strdup("warning catched"));
   Sass_Callee_Entry callee = sass_compiler_get_last_callee(comp);
   Sass_Env_Frame env = sass_callee_get_env(callee);
   union Sass_Value* val = sass_clone_value(s_args);
   sass_env_set_lexical(env, "$warn", val);
-  return 0;
+  return sass_value_stringify(msg, false, 5);
 }
 
 union Sass_Value* fn_debug(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
 {
+  // union Sass_Value* msg = sass_make_warning("debug catched");
   Sass_Callee_Entry callee = sass_compiler_get_last_callee(comp);
   Sass_Env_Frame env = sass_callee_get_env(callee);
   union Sass_Value* val = sass_clone_value(s_args);
   sass_env_set_lexical(env, "$debug", val);
-  return 0;
+  return sass_value_stringify(val, false, 5);
 }
 
 union Sass_Value* fn_error(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
 {
+  union Sass_Value* msg = sass_make_error("error");
+  sass_error_set_message(msg, sass_error_get_message(msg));
+  sass_error_set_message(msg, strdup("error catched"));
   Sass_Callee_Entry callee = sass_compiler_get_last_callee(comp);
   Sass_Env_Frame env = sass_callee_get_env(callee);
   union Sass_Value* val = sass_clone_value(s_args);
   sass_env_set_lexical(env, "$error", val);
-  return 0;
+  return sass_value_stringify(msg, false, 5);
+}
+
+// specific implementation of sass value ops
+union Sass_Value* fn_value_op(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
+{
+  if (!sass_value_is_list(s_args)) {
+    return sass_make_error("Invalid arguments for sass_op");
+  }
+  if (sass_list_get_length(s_args) != 3) {
+    return sass_make_error("Exactly three arguments expected for sass_op");
+  }
+  union Sass_Value* cmd = sass_list_get_value(s_args, 0);
+  union Sass_Value* lhs = sass_list_get_value(s_args, 1);
+  union Sass_Value* rhs = sass_list_get_value(s_args, 2);
+
+  if (!sass_value_is_string(cmd)) {
+    return sass_make_error("You must pass a string as operator");
+  }
+  std::string str(sass_string_get_value(cmd));
+  enum Sass_OP op = ADD;
+  if ("&&" == str) { op = AND; }
+  else if ("||" == str) { op = OR; }
+  else if ("==" == str) { op = EQ; }
+  else if ("!=" == str) { op = NEQ; }
+  else if (">=" == str) { op = GTE; }
+  else if ("<=" == str) { op = LTE; }
+  else if (">" == str) { op = GT; }
+  else if ("<" == str) { op = LT; }
+  else if ("+" == str) { op = ADD; }
+  else if ("-" == str) { op = SUB; }
+  else if ("*" == str) { op = MUL; }
+  else if ("/" == str) { op = DIV; }
+  else if ("%" == str) { op = MOD; }
+  return sass_value_op(op, lhs, rhs);
+}
+
+// specific implementation of sass value ops
+union Sass_Value* fn_value_stringify(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
+{
+  if (!sass_value_is_list(s_args)) {
+    return sass_make_error("Invalid arguments for sass_op");
+  }
+  if (sass_list_get_length(s_args) != 1) {
+    return sass_make_error("Exactly three arguments expected for sass_op");
+  }
+  union Sass_Value* ex = sass_list_get_value(s_args, 0);
+  return sass_value_stringify(ex, false, 5);
 }
 
 // return version of libsass we are linked against
@@ -252,7 +309,7 @@ extern "C" Sass_Function_List ADDCALL libsass_load_functions()
 {
 
   // create list of all custom functions
-  Sass_Function_List fn_list = sass_make_function_list(38);
+  Sass_Function_List fn_list = sass_make_function_list(40);
 
   sass_function_set_list_entry(fn_list,  0, sass_make_function("sass_value_is_null($value)", fn_value_is_null, 0));
   sass_function_set_list_entry(fn_list,  1, sass_make_function("sass_value_is_number($value)", fn_value_is_number, 0));
@@ -301,6 +358,8 @@ extern "C" Sass_Function_List ADDCALL libsass_load_functions()
   sass_function_set_list_entry(fn_list, 35, sass_make_function("sass_map_get_value($list, $i)", fn_map_get_value, 0));
   sass_function_set_list_entry(fn_list, 36, sass_make_function("sass_map_set_key($list, $i, $value)", fn_map_set_key, 0));
   sass_function_set_list_entry(fn_list, 37, sass_make_function("sass_map_set_value($list, $i, $value)", fn_map_set_value, 0));
+  sass_function_set_list_entry(fn_list, 38, sass_make_function("sass_value_stringify($value)", fn_value_stringify, 0));
+  sass_function_set_list_entry(fn_list, 39, sass_make_function("sass_value_op($op, $lhs, $rhs)", fn_value_op, 0));
 
   // return the list
   return fn_list;

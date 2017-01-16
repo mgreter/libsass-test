@@ -1,7 +1,7 @@
 $literal: literal;
 $qstring: "quoted";
 
-test {
+string {
 
   quoted: sass_string_is_quoted($literal);
   literal: sass_string_get_value($literal);

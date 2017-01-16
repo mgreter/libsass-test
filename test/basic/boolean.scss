@@ -1,6 +1,6 @@
 $bool: true;
 
-test {
+bools {
 
   bool: sass_boolean_get_value($bool);
   $bool: sass_boolean_set_value($bool, false);

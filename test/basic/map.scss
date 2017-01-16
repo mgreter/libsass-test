@@ -1,6 +1,6 @@
 $map: (a: a, b: b);
 
-test {
+maps {
 
   length: sass_map_get_length($map);
   key-1: sass_map_get_key($map, 0);

@@ -1,0 +1,21 @@
+ops {
+
+  op-01: sass-value-op("+", a, b);
+  op-02: sass-value-op("-", 4, 2);
+  op-03: sass-value-op("-", 4, red);
+  op-04: sass-value-op("-", blue, 2px);
+  op-05: sass-value-op("+", blue, yellow);
+  op-06: sass-value-op("+", "blue", "yellow");
+  op-07: sass-value-op("*", 4, 2);
+  op-08: sass-value-op("%", 4px, 2.2);
+  op-09: sass-value-op("/", 3dau*4px, 2.2dau);
+  op-10: sass-value-op("!=", true, true);
+  op-11: sass-value-op("==", true, 1);
+  op-12: sass-value-op("<", 3, 2);
+  op-13: sass-value-op(">", 4px, 3);
+  op-14: sass-value-op(">=", 8, 8);
+  op-15: sass-value-op("<=", 3, 2);
+  op-16: sass-value-op("&&", 5, false);
+  op-17: sass-value-op("||", false, 9);
+
+}
