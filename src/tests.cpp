@@ -220,36 +220,50 @@ IMPLEMENT_SET_ITEM(map_set_value, map, value)
 
 union Sass_Value* fn_warn(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
 {
-  union Sass_Value* msg = sass_make_warning("warning catched");
-  sass_warning_set_message(msg, sass_error_get_message(msg));
-  sass_warning_set_message(msg, strdup("warning catched"));
+  // Tests sass_make_warning, sass_warning_get_message, and sass_warning_set_message.
+  union Sass_Value* msg = sass_make_warning("warning");
+  sass_warning_set_message(msg, sass_warning_get_message(msg));
+  std::free(sass_warning_get_message(msg));
+  sass_warning_set_message(msg, strdup("warning caught"));
+
   Sass_Callee_Entry callee = sass_compiler_get_last_callee(comp);
   Sass_Env_Frame env = sass_callee_get_env(callee);
   union Sass_Value* val = sass_clone_value(s_args);
   sass_env_set_lexical(env, "$warn", val);
-  return sass_value_stringify(msg, false, 5);
+  sass_delete_value(val);
+  union Sass_Value* result = sass_value_stringify(msg, false, 5);
+  sass_delete_value(msg);
+  return result;
 }
 
 union Sass_Value* fn_debug(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
 {
-  // union Sass_Value* msg = sass_make_warning("debug catched");
+  // union Sass_Value* msg = sass_make_warning("debug caught");
   Sass_Callee_Entry callee = sass_compiler_get_last_callee(comp);
   Sass_Env_Frame env = sass_callee_get_env(callee);
   union Sass_Value* val = sass_clone_value(s_args);
   sass_env_set_lexical(env, "$debug", val);
-  return sass_value_stringify(val, false, 5);
+  union Sass_Value* result = sass_value_stringify(val, false, 5);
+  sass_delete_value(val);
+  return result;
 }
 
 union Sass_Value* fn_error(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
 {
+  // Tests sass_make_error, sass_error_get_message, and sass_error_set_message.
   union Sass_Value* msg = sass_make_error("error");
   sass_error_set_message(msg, sass_error_get_message(msg));
-  sass_error_set_message(msg, strdup("error catched"));
+  std::free(sass_error_get_message(msg));
+  sass_error_set_message(msg, strdup("error caught"));
+
   Sass_Callee_Entry callee = sass_compiler_get_last_callee(comp);
   Sass_Env_Frame env = sass_callee_get_env(callee);
   union Sass_Value* val = sass_clone_value(s_args);
   sass_env_set_lexical(env, "$error", val);
-  return sass_value_stringify(msg, false, 5);
+  sass_delete_value(val);
+  union Sass_Value* result = sass_value_stringify(msg, false, 5);
+  sass_delete_value(msg);
+  return result;
 }
 
 // specific implementation of sass value ops
