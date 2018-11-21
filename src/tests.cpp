@@ -4,9 +4,6 @@
 #include <string>
 #include "sass.h"
 
-// NOTE: this probably leaks memory here and there
-// this is only meant to test some libsass interna
-
 // most functions are very simple
 #define IMPLEMENT_IS_FN(fn) \
 union Sass_Value* fn_##fn(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp) \
@@ -111,7 +108,7 @@ union Sass_Value* fn_##fn(const union Sass_Value* s_args, Sass_Function_Entry cb
 
 
 // most functions are very simple
-#define IMPLEMENT_SET_STR(fn, type1, rv_type, val_type) \
+#define IMPLEMENT_SET_STR(fn, get_fn, type1, rv_type, val_type) \
 union Sass_Value* fn_##fn(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp) \
 { \
   if (!sass_value_is_list(s_args)) { \
@@ -128,19 +125,21 @@ union Sass_Value* fn_##fn(const union Sass_Value* s_args, Sass_Function_Entry cb
   if (!sass_value_is_string(arg)) { \
     return sass_make_error("You must pass a string into " #fn); \
   } \
-  sass_##fn(inp, strdup(sass_string_get_value(arg))); \
-  return sass_clone_value(inp); \
+  union Sass_Value* result = sass_clone_value(inp); \
+  sass_free_memory(const_cast<char*>(sass_##get_fn(result))); \
+  sass_##fn(result, strdup(sass_string_get_value(arg))); \
+  return result; \
 } \
 
 // number functions
 IMPLEMENT_GET_NR(number_get_value, number, number, value)
 IMPLEMENT_SET_FN(number_set_value, number, number, value)
 IMPLEMENT_GET_STR(number_get_unit, number, number, unit)
-IMPLEMENT_SET_STR(number_set_unit, number, number, unit)
+IMPLEMENT_SET_STR(number_set_unit, number_get_unit, number, number, unit)
 
 // string functions
 IMPLEMENT_GET_STR(string_get_value, string, string, value)
-IMPLEMENT_SET_STR(string_set_value, string, string, value)
+IMPLEMENT_SET_STR(string_set_value, string_get_value, string, string, value)
 IMPLEMENT_IS_FN(string_is_quoted)
 
 // boolean functions
