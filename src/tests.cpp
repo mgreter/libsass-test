@@ -181,7 +181,7 @@ union Sass_Value* fn_##fn(const union Sass_Value* s_args, Sass_Function_Entry cb
 } \
 
 // most functions are very simple
-#define IMPLEMENT_SET_ITEM(fn, type1, val_type) \
+#define IMPLEMENT_SET_ITEM(fn, get_fn, type1, val_type) \
 union Sass_Value* fn_##fn(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp) \
 { \
   if (!sass_value_is_list(s_args)) { \
@@ -198,10 +198,10 @@ union Sass_Value* fn_##fn(const union Sass_Value* s_args, Sass_Function_Entry cb
   if (!sass_value_is_number(item)) { \
     return sass_make_error("You must pass a number into " #fn); \
   } \
-  union Sass_Value* val = sass_list_get_value(s_args, 2); \
-  val = sass_clone_value(val); \
-  sass_##fn(cont, sass_number_get_value(item), val); \
-  return sass_clone_value(cont); \
+  union Sass_Value* result = sass_clone_value(cont); \
+  sass_delete_value(sass_##get_fn(result, sass_number_get_value(item))); \
+  sass_##fn(result, sass_number_get_value(item), sass_clone_value(sass_list_get_value(s_args, 2))); \
+  return result; \
 } \
 
 // list functions
@@ -209,14 +209,14 @@ IMPLEMENT_GET_NR(list_get_length, list, number, value)
 IMPLEMENT_GET_NR(list_get_separator, list, number, value)
 // IMPLEMENT_SET_FN(list_set_separator, number, number, value)
 IMPLEMENT_GET_ITEM(list_get_value, list, value)
-IMPLEMENT_SET_ITEM(list_set_value, list, value)
+IMPLEMENT_SET_ITEM(list_set_value, list_get_value, list, value)
 
 // map functions
 IMPLEMENT_GET_NR(map_get_length, map, number, value)
 IMPLEMENT_GET_ITEM(map_get_key, map, key)
-IMPLEMENT_SET_ITEM(map_set_key, map, key)
+IMPLEMENT_SET_ITEM(map_set_key, map_get_key, map, key)
 IMPLEMENT_GET_ITEM(map_get_value, map, value)
-IMPLEMENT_SET_ITEM(map_set_value, map, value)
+IMPLEMENT_SET_ITEM(map_set_value, map_get_value, map, value)
 
 union Sass_Value* fn_warn(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
 {
