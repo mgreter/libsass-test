@@ -4,9 +4,6 @@
 #include <string>
 #include "sass.h"
 
-// NOTE: this probably leaks memory here and there
-// this is only meant to test some libsass interna
-
 // most functions are very simple
 #define IMPLEMENT_IS_FN(fn) \
 union Sass_Value* fn_##fn(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp) \
@@ -111,7 +108,7 @@ union Sass_Value* fn_##fn(const union Sass_Value* s_args, Sass_Function_Entry cb
 
 
 // most functions are very simple
-#define IMPLEMENT_SET_STR(fn, type1, rv_type, val_type) \
+#define IMPLEMENT_SET_STR(fn, get_fn, type1, rv_type, val_type) \
 union Sass_Value* fn_##fn(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp) \
 { \
   if (!sass_value_is_list(s_args)) { \
@@ -128,19 +125,21 @@ union Sass_Value* fn_##fn(const union Sass_Value* s_args, Sass_Function_Entry cb
   if (!sass_value_is_string(arg)) { \
     return sass_make_error("You must pass a string into " #fn); \
   } \
-  sass_##fn(inp, strdup(sass_string_get_value(arg))); \
-  return sass_clone_value(inp); \
+  union Sass_Value* result = sass_clone_value(inp); \
+  sass_free_memory(const_cast<char*>(sass_##get_fn(result))); \
+  sass_##fn(result, strdup(sass_string_get_value(arg))); \
+  return result; \
 } \
 
 // number functions
 IMPLEMENT_GET_NR(number_get_value, number, number, value)
 IMPLEMENT_SET_FN(number_set_value, number, number, value)
 IMPLEMENT_GET_STR(number_get_unit, number, number, unit)
-IMPLEMENT_SET_STR(number_set_unit, number, number, unit)
+IMPLEMENT_SET_STR(number_set_unit, number_get_unit, number, number, unit)
 
 // string functions
 IMPLEMENT_GET_STR(string_get_value, string, string, value)
-IMPLEMENT_SET_STR(string_set_value, string, string, value)
+IMPLEMENT_SET_STR(string_set_value, string_get_value, string, string, value)
 IMPLEMENT_IS_FN(string_is_quoted)
 
 // boolean functions
@@ -181,7 +180,7 @@ union Sass_Value* fn_##fn(const union Sass_Value* s_args, Sass_Function_Entry cb
 } \
 
 // most functions are very simple
-#define IMPLEMENT_SET_ITEM(fn, type1, val_type) \
+#define IMPLEMENT_SET_ITEM(fn, get_fn, type1, val_type) \
 union Sass_Value* fn_##fn(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp) \
 { \
   if (!sass_value_is_list(s_args)) { \
@@ -198,10 +197,10 @@ union Sass_Value* fn_##fn(const union Sass_Value* s_args, Sass_Function_Entry cb
   if (!sass_value_is_number(item)) { \
     return sass_make_error("You must pass a number into " #fn); \
   } \
-  union Sass_Value* val = sass_list_get_value(s_args, 2); \
-  val = sass_clone_value(val); \
-  sass_##fn(cont, sass_number_get_value(item), val); \
-  return sass_clone_value(cont); \
+  union Sass_Value* result = sass_clone_value(cont); \
+  sass_delete_value(sass_##get_fn(result, sass_number_get_value(item))); \
+  sass_##fn(result, sass_number_get_value(item), sass_clone_value(sass_list_get_value(s_args, 2))); \
+  return result; \
 } \
 
 // list functions
@@ -209,47 +208,61 @@ IMPLEMENT_GET_NR(list_get_length, list, number, value)
 IMPLEMENT_GET_NR(list_get_separator, list, number, value)
 // IMPLEMENT_SET_FN(list_set_separator, number, number, value)
 IMPLEMENT_GET_ITEM(list_get_value, list, value)
-IMPLEMENT_SET_ITEM(list_set_value, list, value)
+IMPLEMENT_SET_ITEM(list_set_value, list_get_value, list, value)
 
 // map functions
 IMPLEMENT_GET_NR(map_get_length, map, number, value)
 IMPLEMENT_GET_ITEM(map_get_key, map, key)
-IMPLEMENT_SET_ITEM(map_set_key, map, key)
+IMPLEMENT_SET_ITEM(map_set_key, map_get_key, map, key)
 IMPLEMENT_GET_ITEM(map_get_value, map, value)
-IMPLEMENT_SET_ITEM(map_set_value, map, value)
+IMPLEMENT_SET_ITEM(map_set_value, map_get_value, map, value)
 
 union Sass_Value* fn_warn(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
 {
-  union Sass_Value* msg = sass_make_warning("warning catched");
-  sass_warning_set_message(msg, sass_error_get_message(msg));
-  sass_warning_set_message(msg, strdup("warning catched"));
+  // Tests sass_make_warning, sass_warning_get_message, and sass_warning_set_message.
+  union Sass_Value* msg = sass_make_warning("warning");
+  sass_warning_set_message(msg, sass_warning_get_message(msg));
+  std::free(sass_warning_get_message(msg));
+  sass_warning_set_message(msg, strdup("warning caught"));
+
   Sass_Callee_Entry callee = sass_compiler_get_last_callee(comp);
   Sass_Env_Frame env = sass_callee_get_env(callee);
   union Sass_Value* val = sass_clone_value(s_args);
   sass_env_set_lexical(env, "$warn", val);
-  return sass_value_stringify(msg, false, 5);
+  sass_delete_value(val);
+  union Sass_Value* result = sass_value_stringify(msg, false, 5);
+  sass_delete_value(msg);
+  return result;
 }
 
 union Sass_Value* fn_debug(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
 {
-  // union Sass_Value* msg = sass_make_warning("debug catched");
+  // union Sass_Value* msg = sass_make_warning("debug caught");
   Sass_Callee_Entry callee = sass_compiler_get_last_callee(comp);
   Sass_Env_Frame env = sass_callee_get_env(callee);
   union Sass_Value* val = sass_clone_value(s_args);
   sass_env_set_lexical(env, "$debug", val);
-  return sass_value_stringify(val, false, 5);
+  union Sass_Value* result = sass_value_stringify(val, false, 5);
+  sass_delete_value(val);
+  return result;
 }
 
 union Sass_Value* fn_error(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
 {
+  // Tests sass_make_error, sass_error_get_message, and sass_error_set_message.
   union Sass_Value* msg = sass_make_error("error");
   sass_error_set_message(msg, sass_error_get_message(msg));
-  sass_error_set_message(msg, strdup("error catched"));
+  std::free(sass_error_get_message(msg));
+  sass_error_set_message(msg, strdup("error caught"));
+
   Sass_Callee_Entry callee = sass_compiler_get_last_callee(comp);
   Sass_Env_Frame env = sass_callee_get_env(callee);
   union Sass_Value* val = sass_clone_value(s_args);
   sass_env_set_lexical(env, "$error", val);
-  return sass_value_stringify(msg, false, 5);
+  sass_delete_value(val);
+  union Sass_Value* result = sass_value_stringify(msg, false, 5);
+  sass_delete_value(msg);
+  return result;
 }
 
 // specific implementation of sass value ops
