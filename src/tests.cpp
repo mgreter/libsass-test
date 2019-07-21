@@ -2,6 +2,7 @@
 #include <iomanip>
 #include <fstream>
 #include <string>
+#include <string.h>
 #include "sass.h"
 
 // most functions are very simple
