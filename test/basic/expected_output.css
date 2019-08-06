@@ -80,7 +80,7 @@ string {
   quoted: true;
   qstring: another;
   literal: another;
-  qstring: another; }
+  qstring: "another"; }
 
 colors {
   color-get-r: 10;
@@ -104,11 +104,11 @@ lists {
   item-1: a;
   item-2: b;
   item-3: c;
-  item-2: new;
+  item-2: "new";
   sep-space: 1;
   sep-comma: 0;
   space: a b c;
-  comma: a, new, c; }
+  comma: a, "new", c; }
 
 maps {
   length: 2;
@@ -116,16 +116,16 @@ maps {
   item-1: a;
   key-2: b;
   item-2: b;
-  key-2: new;
-  item-2: new;
-  map: (a: a, new: new); }
+  key-2: "new";
+  item-2: "new";
+  map: (a: a, "new": "new"); }
 
 stringify {
-  tst-01: 42px;
-  tst-02: 42px;
-  tst-02: 42px;
-  tst-02: 1px;
-  tst-02: yellow; }
+  tst-01: "42px";
+  tst-02: "42px";
+  tst-02: "42px";
+  tst-02: "1px";
+  tst-02: "yellow"; }
 
 ops {
   op-01: ab;
@@ -147,10 +147,10 @@ ops {
   op-17: 9; }
 
 warn {
-  last-warn: warn; }
+  last-warn: "warn"; }
 
 debug {
-  last-debug: debug; }
+  last-debug: "debug"; }
 
 error {
-  last-error: error; }
+  last-error: "error"; }
