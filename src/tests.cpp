@@ -226,10 +226,8 @@ union Sass_Value* fn_warn(const union Sass_Value* s_args, Sass_Function_Entry cb
   sass_free_memory(sass_warning_get_message(msg));
   sass_warning_set_message(msg, strdup("warning caught"));
 
-  Sass_Callee_Entry callee = sass_compiler_get_last_callee(comp);
-  Sass_Env_Frame env = sass_callee_get_env(callee);
   union Sass_Value* val = sass_clone_value(s_args);
-  sass_env_set_lexical(env, "$warn", val);
+  sass_env_set_lexical(comp, "$warn", val);
   sass_delete_value(val);
   union Sass_Value* result = sass_value_stringify(msg, false, 5);
   sass_delete_value(msg);
@@ -239,10 +237,8 @@ union Sass_Value* fn_warn(const union Sass_Value* s_args, Sass_Function_Entry cb
 union Sass_Value* fn_debug(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
 {
   // union Sass_Value* msg = sass_make_warning("debug caught");
-  Sass_Callee_Entry callee = sass_compiler_get_last_callee(comp);
-  Sass_Env_Frame env = sass_callee_get_env(callee);
   union Sass_Value* val = sass_clone_value(s_args);
-  sass_env_set_lexical(env, "$debug", val);
+  sass_env_set_lexical(comp, "$debug", val);
   union Sass_Value* result = sass_value_stringify(val, false, 5);
   sass_delete_value(val);
   return result;
@@ -256,10 +252,8 @@ union Sass_Value* fn_error(const union Sass_Value* s_args, Sass_Function_Entry c
   sass_free_memory(sass_error_get_message(msg));
   sass_error_set_message(msg, strdup("error caught"));
 
-  Sass_Callee_Entry callee = sass_compiler_get_last_callee(comp);
-  Sass_Env_Frame env = sass_callee_get_env(callee);
   union Sass_Value* val = sass_clone_value(s_args);
-  sass_env_set_lexical(env, "$error", val);
+  sass_env_set_lexical(comp, "$error", val);
   sass_delete_value(val);
   union Sass_Value* result = sass_value_stringify(msg, false, 5);
   sass_delete_value(msg);
