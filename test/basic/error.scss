@@ -1,5 +1,6 @@
 error {
   $error: "init";
+  init-error: $error;
   @error("error");
   last-error: $error;
 }
