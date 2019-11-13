@@ -220,6 +220,7 @@ IMPLEMENT_SET_ITEM(map_set_value, map_get_value, map, value)
 
 union Sass_Value* fn_warn(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
 {
+  std::cerr << "Called fn_warn\n";
   // Tests sass_make_warning, sass_warning_get_message, and sass_warning_set_message.
   union Sass_Value* msg = sass_make_warning("warning");
   sass_warning_set_message(msg, sass_warning_get_message(msg));
@@ -238,6 +239,7 @@ union Sass_Value* fn_warn(const union Sass_Value* s_args, Sass_Function_Entry cb
 
 union Sass_Value* fn_debug(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
 {
+  std::cerr << "Called fn_debug\n";
   // union Sass_Value* msg = sass_make_warning("debug caught");
   Sass_Callee_Entry callee = sass_compiler_get_last_callee(comp);
   Sass_Env_Frame env = sass_callee_get_env(callee);
@@ -250,6 +252,7 @@ union Sass_Value* fn_debug(const union Sass_Value* s_args, Sass_Function_Entry c
 
 union Sass_Value* fn_error(const union Sass_Value* s_args, Sass_Function_Entry cb, struct Sass_Compiler* comp)
 {
+  std::cerr << "Called fn_error\n";
   // Tests sass_make_error, sass_error_get_message, and sass_error_set_message.
   union Sass_Value* msg = sass_make_error("error");
   sass_error_set_message(msg, sass_error_get_message(msg));
