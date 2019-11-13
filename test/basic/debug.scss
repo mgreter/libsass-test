@@ -1,6 +1,5 @@
 debug {
   $debug: "init";
-  init-debug: $debug;
   @debug("debug");
   last-debug: $debug;
 }
