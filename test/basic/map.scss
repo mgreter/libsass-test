@@ -1,17 +1,20 @@
-$map: (a: a, b: b);
+$map: (a: a, b: b, c: c);
 
 maps {
 
-  length: sass_map_get_length($map);
-  key-1: sass_map_get_key($map, 0);
-  item-1: sass_map_get_value($map, 0);
-  key-2: sass_map_get_key($map, 1);
-  item-2: sass_map_get_value($map, 1);
-  $map: sass_map_set_value($map, 1, "new");
-  $map: sass_map_set_key($map, 1, "new");
-  key-2: sass_map_get_key($map, 1);
-  item-2: sass_map_get_value($map, 1);
+  $iterated: sass_map_iterate($map);
+  length: sass_list_get_size($iterated);
+  $pair1: sass_list_get_value($iterated, 0);
+  key-1: sass_list_get_value($pair1, 0);
+  item-1: sass_list_get_value($pair1, 1);
+  $pair2: sass_list_get_value($iterated, 1);
+  key-2: sass_list_get_value($pair2, 0);
+  item-2: sass_list_get_value($pair2, 1);
+  $pair3: sass_list_get_value($iterated, 2);
+  key-3: sass_list_get_value($pair3, 0);
+  item-3: sass_list_get_value($pair3, 1);
 
+  iterated: $iterated;
   map: inspect($map);
 
 }

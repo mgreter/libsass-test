@@ -3,7 +3,7 @@ $comma: (a, b, c);
 
 lists {
 
-  length: sass_list_get_length($comma);
+  length: sass_list_get_size($comma);
   item-1: sass_list_get_value($comma, 0);
   item-2: sass_list_get_value($comma, 1);
   item-3: sass_list_get_value($comma, 2);

@@ -66,9 +66,12 @@ test-is {
 numbers {
   number-get-unit: px;
   number-get-value: 42;
-  number-get-unit: rad;
+  number-get-unit: ms*rad/s;
   number-get-value: 3.14;
-  nr: 3.14rad; }
+  number-get-unit: rad;
+  number-get-value: 0.00314;
+  number-get-unit: deg;
+  number-get-value: 0.1799087477; }
 
 string {
   quoted: false;
@@ -111,32 +114,30 @@ lists {
   comma: a, "new", c; }
 
 maps {
-  length: 2;
+  length: 3;
   key-1: a;
   item-1: a;
   key-2: b;
   item-2: b;
-  key-2: "new";
-  item-2: "new";
-  map: (a: a, "new": "new"); }
+  key-3: c;
+  item-3: c;
+  iterated: a a, b b, c c;
+  map: (a: a, b: b, c: c); }
 
 stringify {
   tst-01: "42px";
   tst-02: "42px";
   tst-02: "42px";
-  tst-02: "1px";
+  tst-02: "4px/4";
   tst-02: "yellow"; }
 
 ops {
   op-01: ab;
   op-02: 2;
-  op-03: 4-red;
-  op-04: #0000fd;
-  op-05: white;
-  op-06: blueyellow;
+  op-06: "blueyellow";
   op-07: 8;
   op-08: 1.8px;
-  op-09: 5.45455px;
+  op-09: 5.4545454545px;
   op-10: false;
   op-11: false;
   op-12: false;

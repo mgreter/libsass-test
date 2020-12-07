@@ -2,9 +2,9 @@ ops {
 
   op-01: sass-value-op("+", a, b);
   op-02: sass-value-op("-", 4, 2);
-  op-03: sass-value-op("-", 4, red);
-  op-04: sass-value-op("-", blue, 2px);
-  op-05: sass-value-op("+", blue, yellow);
+  //op-03: sass-value-op("-", 4, red);
+  //op-04: sass-value-op("-", blue, 2px);
+  //op-05: sass-value-op("+", blue, yellow);
   op-06: sass-value-op("+", "blue", "yellow");
   op-07: sass-value-op("*", 4, 2);
   op-08: sass-value-op("%", 4px, 2.2);
