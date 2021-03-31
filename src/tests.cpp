@@ -7,7 +7,7 @@
 
 // most functions are very simple
 #define IMPLEMENT_IS_FN(fn) \
-struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp) \
+struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp, void*) \
 { \
   if (!sass_value_is_list(s_args)) { \
     return sass_make_error("Invalid arguments for " #fn); \
@@ -33,7 +33,7 @@ IMPLEMENT_IS_FN(value_is_warning)
 
 // most functions are very simple
 #define IMPLEMENT_GET_NR(fn, type, rv_type, val_type) \
-struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp) \
+struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp, void*) \
 { \
   if (!sass_value_is_list(s_args)) { \
     return sass_make_error("Invalid arguments for " #fn); \
@@ -51,7 +51,7 @@ struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp) \
 
 // most functions are very simple
 #define IMPLEMENT_GET_BOOL(fn, type, rv_type, val_type) \
-struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp) \
+struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp, void*) \
 { \
   if (!sass_value_is_list(s_args)) { \
     return sass_make_error("Invalid arguments for " #fn); \
@@ -69,7 +69,7 @@ struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp) \
 
 // most functions are very simple
 #define IMPLEMENT_GET_STR(fn, type, rv_type, val_type) \
-struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp) \
+struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp, void*) \
 { \
   if (!sass_value_is_list(s_args)) { \
     return sass_make_error("Invalid arguments for " #fn); \
@@ -87,7 +87,7 @@ struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp) \
 
 // most functions are very simple
 #define IMPLEMENT_SET_FN(fn, type1, rv_type, val_type) \
-struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp) \
+struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp, void*) \
 { \
   if (!sass_value_is_list(s_args)) { \
     return sass_make_error("Invalid arguments for " #fn); \
@@ -110,7 +110,7 @@ struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp) \
 
 // most functions are very simple
 #define IMPLEMENT_SET_STR(fn, get_fn, type1, rv_type, val_type) \
-struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp) \
+struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp, void*) \
 { \
   if (!sass_value_is_list(s_args)) { \
     return sass_make_error("Invalid arguments for " #fn); \
@@ -131,7 +131,7 @@ struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp) \
   return result; \
 } \
 
-struct SassValue* fn_number_set_unit(struct SassValue* s_args, struct SassCompiler* comp)
+struct SassValue* fn_number_set_unit(struct SassValue* s_args, struct SassCompiler* comp, void*)
 {
   struct SassValue* inp = sass_list_get_value(s_args, 0);
   struct SassValue* arg = sass_list_get_value(s_args, 1);
@@ -140,7 +140,7 @@ struct SassValue* fn_number_set_unit(struct SassValue* s_args, struct SassCompil
   return result;
 }
 
-struct SassValue* fn_sass_number_normalize(struct SassValue* s_args, struct SassCompiler* comp)
+struct SassValue* fn_sass_number_normalize(struct SassValue* s_args, struct SassCompiler* comp, void*)
 {
   struct SassValue* inp = sass_list_get_value(s_args, 0);
   struct SassValue* result = sass_clone_value(inp);
@@ -148,7 +148,7 @@ struct SassValue* fn_sass_number_normalize(struct SassValue* s_args, struct Sass
   return result;
 }
 
-struct SassValue* fn_sass_number_reduce(struct SassValue* s_args, struct SassCompiler* comp)
+struct SassValue* fn_sass_number_reduce(struct SassValue* s_args, struct SassCompiler* comp, void*)
 {
   struct SassValue* inp = sass_list_get_value(s_args, 0);
   struct SassValue* result = sass_clone_value(inp);
@@ -184,7 +184,7 @@ IMPLEMENT_SET_FN(color_set_a, color, number, value)
 
 // most functions are very simple
 #define IMPLEMENT_GET_ITEM(fn, type1, val_type) \
-struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp) \
+struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp, void*) \
 { \
   if (!sass_value_is_list(s_args)) { \
     return sass_make_error("Invalid arguments for " #fn); \
@@ -206,7 +206,7 @@ struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp) \
 
 // most functions are very simple
 #define IMPLEMENT_SET_ITEM(fn, get_fn, type1, val_type) \
-struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp) \
+struct SassValue* fn_##fn(struct SassValue* s_args, struct SassCompiler* comp, void*) \
 { \
   if (!sass_value_is_list(s_args)) { \
     return sass_make_error("Invalid arguments for " #fn); \
@@ -235,7 +235,7 @@ IMPLEMENT_GET_NR(list_get_separator, list, number, value)
 IMPLEMENT_GET_ITEM(list_get_value, list, value)
 IMPLEMENT_SET_ITEM(list_set_value, list_get_value, list, value)
 
-struct SassValue* fn_sass_map_make_iterator(struct SassValue* s_args, struct SassCompiler* comp)
+struct SassValue* fn_sass_map_make_iterator(struct SassValue* s_args, struct SassCompiler* comp, void*)
 {
   SassValue* result = sass_make_list(SASS_COMMA, false);
   struct SassValue* inp = sass_list_get_value(s_args, 0);
@@ -252,26 +252,26 @@ struct SassValue* fn_sass_map_make_iterator(struct SassValue* s_args, struct Sas
 }
 
 // Function invoked on `@warn` hook (we are free to do with it whatever we want)
-struct SassValue* fn_warn(struct SassValue* s_args, struct SassCompiler* comp)
+struct SassValue* fn_warn(struct SassValue* s_args, struct SassCompiler* comp, void*)
 {
   sass_env_set_lexical(comp, "warn", s_args);
   return sass_value_stringify(s_args, false, 5);
 }
 
-struct SassValue* fn_debug(struct SassValue* s_args, struct SassCompiler* comp)
+struct SassValue* fn_debug(struct SassValue* s_args, struct SassCompiler* comp, void*)
 {
   sass_env_set_lexical(comp, "debug", s_args);
   return sass_value_stringify(s_args, false, 5);
 }
 
-struct SassValue* fn_error(struct SassValue* s_args, struct SassCompiler* comp)
+struct SassValue* fn_error(struct SassValue* s_args, struct SassCompiler* comp, void*)
 {
   sass_env_set_lexical(comp, "error", s_args);
   return sass_value_stringify(s_args, false, 5);
 }
 
 // specific implementation of sass value ops
-struct SassValue* fn_value_op(struct SassValue* s_args, struct SassCompiler* comp)
+struct SassValue* fn_value_op(struct SassValue* s_args, struct SassCompiler* comp, void*)
 {
   if (!sass_value_is_list(s_args)) {
     return sass_make_error("Invalid arguments for sass_op");
@@ -304,7 +304,7 @@ struct SassValue* fn_value_op(struct SassValue* s_args, struct SassCompiler* com
   return sass_value_op(op, lhs, rhs);
 }
 // specific implementation of sass value ops
-struct SassValue* fn_value_stringify(struct SassValue* s_args, struct SassCompiler* comp)
+struct SassValue* fn_value_stringify(struct SassValue* s_args, struct SassCompiler* comp, void*)
 {
   if (!sass_value_is_list(s_args)) {
     return sass_make_error("Invalid arguments for stringify");
