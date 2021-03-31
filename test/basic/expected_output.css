@@ -71,7 +71,7 @@ numbers {
   number-get-unit: rad;
   number-get-value: 0.00314;
   number-get-unit: deg;
-  number-get-value: 0.1799087477; }
+  number-get-value: 0.17991; }
 
 string {
   quoted: false;
@@ -137,7 +137,7 @@ ops {
   op-06: "blueyellow";
   op-07: 8;
   op-08: 1.8px;
-  op-09: 5.4545454545px;
+  op-09: 5.45455px;
   op-10: false;
   op-11: false;
   op-12: false;
